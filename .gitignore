@@ -5,7 +5,7 @@ Thumbs.db
 .vscode/
 
 # Ignore dependencies
-/vendor/
+# /vendor/
 
 # Ignore environment files
 .env
@@ -25,5 +25,5 @@ Thumbs.db
 *.sqlite3
 
 #Ignore composer files
-composer.json
-composer.lock
+# composer.json
+# composer.lock
