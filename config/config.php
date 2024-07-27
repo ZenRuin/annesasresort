@@ -1,3 +1,3 @@
 <?php
-    $baseUrl = 'http://localhost/Capstone/';
+    $baseUrl = 'http://localhost/annesasresort/';
 ?>
