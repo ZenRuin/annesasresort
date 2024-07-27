@@ -1,0 +1,7 @@
+Admin
+admin@example.com
+adminpassword
+
+Users
+johncena
+johncena

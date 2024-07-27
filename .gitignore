@@ -1,0 +1,29 @@
+# Ignore system and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Ignore dependencies
+/vendor/
+
+# Ignore environment files
+.env
+
+# Ignore log files
+*.log
+
+# Ignore session files
+/sessions/
+
+# Ignore compiled files
+*.phpc
+*.phar
+
+# Ignore SQLite database files
+*.sqlite
+*.sqlite3
+
+#Ignore composer files
+composer.json
+composer.lock
