@@ -15,6 +15,13 @@ document.addEventListener("DOMContentLoaded", function () {
     this.classList.add("hovered");
   }
   list.forEach((item) => item.addEventListener("click", activeLink));
+
+  const dashboardLink = document.querySelector(".navigation li.dashboard-link");
+  if (dashboardLink) {
+    dashboardLink.classList.add("hovered");
+  }
+
+  showDashboard();
 });
 
 function showElement(elementId) {

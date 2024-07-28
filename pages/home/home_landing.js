@@ -205,4 +205,40 @@ document.addEventListener("DOMContentLoaded", function () {
       text: "This guy does everything he can to get the job done and done right. This is the second time I've hired him, and I'll hire him again in the future.",
     },
   ];
+
+  const roomHourSelect = document.getElementById("roomhour1");
+  const roomPriceDisplay = document.getElementById("roomprice1");
+
+  const basePrice = 350;
+  const hourlyRates = {
+    3: 350,
+    12: 1200,
+    24: 2400,
+  };
+
+  roomHourSelect.addEventListener("change", function () {
+    const selectedHours = parseInt(roomHourSelect.value);
+    const newPrice = hourlyRates[selectedHours] || basePrice;
+    roomPriceDisplay.textContent = `₱ ${newPrice.toFixed(2)}`;
+  });
+
+  function updatePrice(selectId, priceId, hourlyRates) {
+    const hourSelect = document.getElementById(selectId);
+    const priceDisplay = document.getElementById(priceId);
+
+    hourSelect.addEventListener("change", function () {
+      const selectedHours = parseInt(hourSelect.value);
+      const newPrice = hourlyRates[selectedHours];
+      priceDisplay.textContent = `₱ ${newPrice.toFixed(2)}`;
+    });
+  }
+
+  // Room 7
+  updatePrice("familyhour7", "familyprice7", { 3: 500, 12: 1600, 24: 3200 });
+
+  // Room 8
+  updatePrice("hourfamily8", "hourprice8", { 3: 1200, 12: 3200, 24: 4800 });
+
+  // Room 9
+  updatePrice("familyhour9", "familyprice9", { 3: 550, 12: 2200, 24: 4000 });
 });

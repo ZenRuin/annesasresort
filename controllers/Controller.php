@@ -1,13 +1,16 @@
 <?php
-class Controller {
+class Controller
+{
     protected $baseUrl;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->loadConfig();
     }
 
     // Load the configuration
-    protected function loadConfig() {
+    protected function loadConfig()
+    {
         $filePathConfig = "config/config.php";
         $errorPath = "pages/errors/404.php";
 
@@ -22,10 +25,11 @@ class Controller {
     }
 
     // Load the page content
-    protected function loadPage($page, $folder = 'home') {
+    protected function loadPage($page, $folder = 'home')
+    {
         $content = '';
         ob_start();
-        if($folder == 'home') {
+        if ($folder == 'home') {
             $filePathNavbar = "pages/{$folder}/includes/navbar.php";
             $filePathUser = "pages/{$folder}/{$page}.php";
             $filePathFooter = "pages/{$folder}/includes/footer.php";
@@ -78,7 +82,8 @@ class Controller {
     }
 
     // Public method to get the page content
-    public function getPageContent($page, $folder = 'home') {
+    public function getPageContent($page, $folder = 'home')
+    {
         return $this->loadPage($page, $folder);
     }
 }

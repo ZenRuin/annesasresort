@@ -11,15 +11,15 @@
 // define('DB_USER', $_ENV['DB_USER']);
 // define('DB_PASS', $_ENV['DB_PASS']);
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
 require 'vendor/autoload.php';
 
 use Dotenv\Dotenv;
 
-$dotenvPath = dirname(__DIR__); // Assuming .env is one directory level above public_html
+$dotenvPath = dirname(__DIR__);
 
 if (file_exists($dotenvPath . '/.env')) {
     $dotenv = Dotenv::createImmutable($dotenvPath);
@@ -77,6 +77,16 @@ switch ($action) {
     case 'register':
         require_once 'controllers/RegisterControllers.php';
         $controller = new RegisterControllers($pdo);
+        $controller->handleRequest();
+        break;
+    case 'changePassword':
+        require_once 'controllers/AdminControllers.php';
+        $controller = new AdminController();
+        $controller->changePassword();
+        exit;
+    case 'bookings':
+        require_once 'controllers/BookingController.php';
+        $controller = new BookingController($pdo);
         $controller->handleRequest();
         break;
     default:

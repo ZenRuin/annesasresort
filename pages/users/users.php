@@ -1,3 +1,33 @@
+<?php
+try {
+    $pdo = new PDO(
+        "mysql:host={$_ENV['DB_HOST']};dbname={$_ENV['DB_NAME']}",
+        $_ENV['DB_USER'],
+        $_ENV['DB_PASS']
+    );
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php?action=home");
+    exit;
+}
+
+$stmt = $pdo->prepare("SELECT first_name, last_name, email, phone_number FROM users WHERE id = :id");
+$stmt->bindParam(':id', $_SESSION['user_id']);
+$stmt->execute();
+$users = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$fullName = isset($users['first_name']) ? $users['first_name'] : '';
+$fullName .= isset($users['last_name']) ? ' ' . $users['last_name'] : '';
+
+$displayName = !empty($fullName) ? $fullName : 'User';
+$email = isset($users['email']) ? $users['email'] : 'No email provided.';
+$phone = isset($users['phone_number']) ? $users['phone_number'] : 'No phone number provided.';
+?>
+
 <main id="users">
     <!-- Dashboard -->
     <section class="contentshow" id="dashboard">
@@ -7,10 +37,10 @@
                     <div class="profile-section">
                         <div class="card">
                             <div class="picture">
-                                <img src="assets/images/Profile.png" alt="image" id="profile-pic">
+                                <img src="assets/images/Profile.png" alt="Profile Image" id="profile-pic">
                             </div>
                             <div class="profile-name">
-                                <h1>Annesas Resort</h1>
+                                <h1><?php echo htmlspecialchars($displayName); ?></h1>
                             </div>
                         </div>
                         <div class="calendar-container mx-5">
@@ -53,7 +83,7 @@
                         <tr class="result-header m-5">
                             <th>No.</th>
                             <th>Date Issued</th>
-                            <th>Accomodation</th>
+                            <th>Accommodation</th>
                             <th>Price</th>
                             <th>Status</th>
                         </tr>
@@ -88,29 +118,25 @@
                         <img src="assets/images/Profile.png" alt="image" id="profile-pic">
                     </div>
                     <div class="profile-username mt-5">
-                        <h1>annesaresort</h1>
+                        <h1><?php echo htmlspecialchars($displayName); ?></h1>
                     </div>
                 </div>
                 <div class="details-info card mx-3">
-                    <div class="account-title">
+                    <div class="account-title mb-5">
                         <h1>Account Information</h1>
                     </div>
                     <div class="account-details">
                         <div class="form-control">
                             <h3>name:</h3>
-                            <p>Annesas Resort</p>
+                            <p><?php echo htmlspecialchars($displayName); ?></p>
                         </div>
                         <div class="form-control">
                             <h3>email:</h3>
-                            <p>annesaresort@gmail.com</p>
+                            <p><?php echo htmlspecialchars($email); ?></p>
                         </div>
                         <div class="form-control">
                             <h3>phone number:</h3>
-                            <p>09999999999</p>
-                        </div>
-                        <div class="form-control">
-                            <h3>day of birth:</h3>
-                            <p>September 2017</p>
+                            <p><?php echo htmlspecialchars($phone); ?></p>
                         </div>
                     </div>
                 </div>
@@ -161,270 +187,292 @@
                     <div class="table-title">
                         <h1>Tables</h1>
                     </div>
-                    <table class="results">
-                        <tr class="result-header">
-                            <th>Accomodation Class</th>
-                            <th># of Pax</th>
-                            <th>Price</th>
-                            <th>Reservation</th>
-                        </tr>
-                        <tr>
-                            <td>Pavilion 1 ni Maria</td>
-                            <td>6</td>
-                            <td>250</td>
-                            <td>
-                                <button type="submit" class="btn btn-primary">
-                                    <a href="#">Book Now</a>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Pavilion 2 ni berto</td>
-                            <td>6</td>
-                            <td>250</td>
-                            <td>
-                                <button type="submit" class="btn btn-primary">
-                                    <a href="#">Book Now</a>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>cottage ni tisya (1st Floor)</td>
-                            <td>35</td>
-                            <td>1800</td>
-                            <td>
-                                <button type="submit" class="btn btn-primary">
-                                    <a href="#">Book Now</a>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>cottage ni tisya (2nd Floor)</td>
-                            <td>100</td>
-                            <td>3000</td>
-                            <td>
-                                <button type="submit" class="btn btn-primary">
-                                    <a href="#">Book Now</a>
-                                </button>
-                            </td>
-                        </tr>
-                    </table>
+                    <form action="index.php?action=bookings" method="post" class="book-form">
+                        <table class="results table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Accommodation Class</th>
+                                    <th># of Pax</th>
+                                    <th>Price</th>
+                                    <th>Reservation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <input type="hidden" name="accommodation_name" value="Pavilion 1 ni Maria">
+                                        Pavilion 1 ni Maria
+                                    </td>
+                                    <td>6</td>
+                                    <td>250</td>
+                                    <td>
+                                        <input type="hidden" name="hours" value="12">
+                                        <!-- Set appropriate default value -->
+                                        <button type="submit" class="btn btn-primary">Book Now</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="hidden" name="accommodation_name" value="Pavilion 2 ni Berto">
+                                        Pavilion 2 ni Berto
+                                    </td>
+                                    <td>6</td>
+                                    <td>250</td>
+                                    <td>
+                                        <input type="hidden" name="hours" value="12">
+                                        <!-- Set appropriate default value -->
+                                        <button type="submit" class="btn btn-primary">Book Now</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="hidden" name="accommodation_name"
+                                            value="Cottage ni Tisya (1st Floor)">
+                                        Cottage ni Tisya (1st Floor)
+                                    </td>
+                                    <td>35</td>
+                                    <td>1800</td>
+                                    <td>
+                                        <input type="hidden" name="hours" value="12">
+                                        <!-- Set appropriate default value -->
+                                        <button type="submit" class="btn btn-primary">Book Now</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="hidden" name="accommodation_name"
+                                            value="Cottage ni Tisya (2nd Floor)">
+                                        Cottage ni Tisya (2nd Floor)
+                                    </td>
+                                    <td>100</td>
+                                    <td>3000</td>
+                                    <td>
+                                        <input type="hidden" name="hours" value="12">
+                                        <!-- Set appropriate default value -->
+                                        <button type="submit" class="btn btn-primary">Book Now</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+
                 </div>
 
                 <div class="cottage-details">
                     <div class="cottage-title">
                         <h1>Cottages</h1>
                     </div>
-                    <table class="results">
-                        <tr class="result-header">
-                            <th>Accomodation Class</th>
-                            <th>Booking Tier</th>
-                            <th># of Pax</th>
-                            <th>Price</th>
-                            <th>Reservation</th>
-                        </tr>
-                        <tr>
-                            <td>bamboo cottage</td>
-                            <td>
-                                <label for="cottagenames"></label>
-                                <select id="cottagenames">
-                                    <option value="...">...</option>
-                                    <option value="Ponceng">Ponceng</option>
-                                    <option value="Vireng">Vireng</option>
-                                </select>
-                            </td>
-                            <td>8</td>
-                            <td>600</td>
-                            <td>
-                                <button type="submit" class="btn btn-primary">
-                                    <a href="#">Book Now</a>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Timothy, tiffany,<br>trizh, troy cottage</td>
-                            <td>
-                                <label for="cottagenames"></label>
-                                <select id="cottagenames">
-                                    <option value="...">...</option>
-                                    <option value="Timothy">Timothy</option>
-                                    <option value="Tiffany">Tiffany</option>
-                                    <option value="Trizh">Trizh</option>
-                                    <option value="Troy">Troy</option>
-                                </select>
-                            </td>
-                            <td>18</td>
-                            <td>1000</td>
-                            <td>
-                                <button type="submit" class="btn btn-primary">
-                                    <a href="#">Book Now</a>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Regular cottage</td>
-                            <td>
-                                <label for="cottagenames"></label>
-                                <select id="cottagenames">
-                                    <option value="...">...</option>
-                                    <option value="Tryse">Tryse</option>
-                                    <option value="Tricia">Tricia</option>
-                                    <option value="Taragis">Taragis</option>
-                                </select>
-                            </td>
-                            <td>8</td>
-                            <td>600</td>
-                            <td>
-                                <button type="submit" class="btn btn-primary">
-                                    <a href="#">Book Now</a>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>family cottage</td>
-                            <td>
-                                <label for="cottagenames"></label>
-                                <select id="cottagenames">
-                                    <option value="...">...</option>
-                                    <option value="Tristan">Tristan</option>
-                                    <option value="Edil">Edil</option>
-                                    <option value="Tracy">Tracy</option>
-                                </select>
-                            </td>
-                            <td>18</td>
-                            <td>1000</td>
-                            <td>
-                                <button type="submit" class="btn btn-primary">
-                                    <a href="#">Book Now</a>
-                                </button>
-                            </td>
-                        </tr>
-                    </table>
+
+                    <form action="index.php?action=bookings" method="post" class="book-form">
+                        <table class="results table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Accommodation Class</th>
+                                    <th>Booking Tier</th>
+                                    <th># of Pax</th>
+                                    <th>Price</th>
+                                    <th>Reservation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Bamboo Cottage</td>
+                                    <td>
+                                        <select name="booking_tier[Bamboo Cottage]" class="form-control">
+                                            <option value="Ponceng">Ponceng</option>
+                                            <option value="Vireng">Vireng</option>
+                                        </select>
+                                    </td>
+                                    <td>8</td>
+                                    <td>600</td>
+                                    <td>
+                                        <input type="hidden" name="accommodation_name[Bamboo Cottage]"
+                                            value="Bamboo Cottage">
+                                        <input type="hidden" name="price[Bamboo Cottage]" value="600">
+                                        <input type="hidden" name="pax[Bamboo Cottage]" value="8">
+                                        <button type="submit" class="btn btn-primary">Book Now</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Timothy, Tiffany, Trizh, Troy Cottage</td>
+                                    <td>
+                                        <select name="booking_tier[Timothy, Tiffany, Trizh, Troy Cottage]"
+                                            class="form-control">
+                                            <option value="Timothy">Timothy</option>
+                                            <option value="Tiffany">Tiffany</option>
+                                            <option value="Trizh">Trizh</option>
+                                            <option value="Troy">Troy</option>
+                                        </select>
+                                    </td>
+                                    <td>18</td>
+                                    <td>1000</td>
+                                    <td>
+                                        <input type="hidden"
+                                            name="accommodation_name[Timothy, Tiffany, Trizh, Troy Cottage]"
+                                            value="Timothy, Tiffany, Trizh, Troy Cottage">
+                                        <input type="hidden" name="price[Timothy, Tiffany, Trizh, Troy Cottage]"
+                                            value="1000">
+                                        <input type="hidden" name="pax[Timothy, Tiffany, Trizh, Troy Cottage]"
+                                            value="18">
+                                        <button type="submit" class="btn btn-primary">Book Now</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Regular Cottage</td>
+                                    <td>
+                                        <select name="booking_tier[Regular Cottage]" class="form-control">
+                                            <option value="Tryse">Tryse</option>
+                                            <option value="Tricia">Tricia</option>
+                                            <option value="Taragis">Taragis</option>
+                                        </select>
+                                    </td>
+                                    <td>8</td>
+                                    <td>600</td>
+                                    <td>
+                                        <input type="hidden" name="accommodation_name[Regular Cottage]"
+                                            value="Regular Cottage">
+                                        <input type="hidden" name="price[Regular Cottage]" value="600">
+                                        <input type="hidden" name="pax[Regular Cottage]" value="8">
+                                        <button type="submit" class="btn btn-primary">Book Now</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Family Cottage</td>
+                                    <td>
+                                        <select name="booking_tier[Family Cottage]" class="form-control">
+                                            <option value="Tristan">Tristan</option>
+                                            <option value="Edil">Edil</option>
+                                            <option value="Tracy">Tracy</option>
+                                        </select>
+                                    </td>
+                                    <td>18</td>
+                                    <td>1000</td>
+                                    <td>
+                                        <input type="hidden" name="accommodation_name[Family Cottage]"
+                                            value="Family Cottage">
+                                        <input type="hidden" name="price[Family Cottage]" value="1000">
+                                        <input type="hidden" name="pax[Family Cottage]" value="18">
+                                        <button type="submit" class="btn btn-primary">Book Now</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
                 </div>
 
                 <div class="room-details">
                     <div class="rooms-title">
                         <h1>Rooms</h1>
                     </div>
-                    <table class="results">
-                        <tr class="result-header">
-                            <th>Accomodation Class</th>
-                            <th># of Pax</th>
-                            <th>room#</th>
-                            <th># of Hours</th>
-                            <th>Price</th>
-                            <th>Reservation</th>
-                        </tr>
-                        <tr>
-                            <td>Rooms 1 - 6</td>
-                            <td>2</td>
-                            <td>
-                                <label for="roomnumber"></label>
-                                <select id="roomnumber">
-                                    <option value="...">...</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                </select>
-                            </td>
-                            <td>
-                                <label for="hournumber"></label>
-                                <select id="hournumber">
-                                    <option value="...">...</option>
-                                    <option value="3">3</option>
-                                    <option value="12">12</option>
-                                    <option value="24">24</option>
-                                </select>
-                            </td>
-                            <td>350</td>
-                            <td>
-                                <button type="submit" class="btn btn-primary">
-                                    <a href="#">Book Now</a>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Family Room #7</td>
-                            <td>5</td>
-                            <td>
-                                <label for="roomnumber"></label>
-                                <select id="roomnumber">
-                                    <option value="...">...</option>
-                                    <option value="7">7</option>
-                                </select>
-                            </td>
-                            <td>
-                                <label for="hournumber"></label>
-                                <select id="hournumber">
-                                    <option value="...">...</option>
-                                    <option value="3">3</option>
-                                    <option value="12">12</option>
-                                    <option value="24">24</option>
-                                </select>
-                            </td>
-                            <td>500</td>
-                            <td>
-                                <button type="submit" class="btn btn-primary">
-                                    <a href="#">Book Now</a>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Family Room #8</td>
-                            <td>12</td>
-                            <td>
-                                <label for="roomnumber"></label>
-                                <select id="roomnumber">
-                                    <option value="...">...</option>
-                                    <option value="8">8</option>
-                                </select>
-                            </td>
-                            <td>
-                                <label for="hournumber"></label>
-                                <select id="hournumber">
-                                    <option value="...">...</option>
-                                    <option value="3">3</option>
-                                    <option value="12">12</option>
-                                    <option value="24">24</option>
-                                </select>
-                            </td>
-                            <td>1200</td>
-                            <td>
-                                <button type="submit" class="btn btn-primary">
-                                    <a href="#">Book Now</a>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Family Room #9</td>
-                            <td>5</td>
-                            <td>
-                                <label for="roomnumber"></label>
-                                <select id="roomnumber">
-                                    <option value="...">...</option>
-                                    <option value="9">9</option>
-                                </select>
-                            </td>
-                            <td>
-                                <label for="hournumber"></label>
-                                <select id="hournumber">
-                                    <option value="...">...</option>
-                                    <option value="3">3</option>
-                                    <option value="12">12</option>
-                                    <option value="24">24</option>
-                                </select>
-                            </td>
-                            <td>550</td>
-                            <td>
-                                <button type="submit" class="btn btn-primary">
-                                    <a href="#">Book Now</a>
-                                </button>
-                            </td>
-                        </tr>
-                    </table>
+                    <form action="index.php?action=bookings" method="post" class="book-form">
+                        <table class="results table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Accommodation Class</th>
+                                    <th># of Pax</th>
+                                    <th>Room#</th>
+                                    <th># of Hours</th>
+                                    <th>Price</th>
+                                    <th>Reservation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Rooms 1 - 6</td>
+                                    <td>2</td>
+                                    <td>
+                                        <select name="room_number_1" class="form-control">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="hours_1" class="form-control">
+                                            <option value="3">3 hours</option>
+                                            <option value="12">12 hours</option>
+                                            <option value="24">24 hours</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div id="roomprice1">₱ 350.00</div>
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary">Book Now</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Family Room #7</td>
+                                    <td>5</td>
+                                    <td>
+                                        <select name="room_number_2" class="form-control">
+                                            <option value="7">7</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="hours_2" class="form-control">
+                                            <option value="3">3 hours</option>
+                                            <option value="12">12 hours</option>
+                                            <option value="24">24 hours</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div id="roomprice7">₱ 500.00</div>
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary">Book Now</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Family Room #8</td>
+                                    <td>12</td>
+                                    <td>
+                                        <select name="room_number_3" class="form-control">
+                                            <option value="8">8</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="hours_3" class="form-control">
+                                            <option value="3">3 hours</option>
+                                            <option value="12">12 hours</option>
+                                            <option value="24">24 hours</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div id="roomprice8">₱ 1200.00</div>
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary">Book Now</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Family Room #9</td>
+                                    <td>5</td>
+                                    <td>
+                                        <select name="room_number_4" class="form-control">
+                                            <option value="9">9</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="hours_4" class="form-control">
+                                            <option value="3">3 hours</option>
+                                            <option value="12">12 hours</option>
+                                            <option value="24">24 hours</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div id="roomprice9">₱ 500.00</div>
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary">Book Now</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
                 </div>
             </div>
         </div>

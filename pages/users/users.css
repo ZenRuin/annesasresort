@@ -61,7 +61,7 @@
 }
 
 .card {
-    padding: 40px;
+    padding: 50px;
     background: var(--text-color1, #ffffff);
     border-radius: 20px;
     text-align: center;
@@ -69,14 +69,13 @@
 }
 
 .card img {
-    width: 180px;
-    height: 180px;
+    width: 150px;
+    height: 150px;
     object-fit: cover;
 }
 
 .profile-name {
     margin-top: 20px;
-    text-align: center;
     color: var(--text-color3, #333);
     font-size: 24px;
 }
@@ -142,7 +141,7 @@
 
 .calendar-date {
     display: grid;
-    grid-template-columns: repeat(7,1fr);
+    grid-template-columns: repeat(7, 1fr);
     text-align: center;
     padding: 10px;
     box-sizing: border-box;
@@ -170,8 +169,6 @@
 }
 
 /* BOOKING RESULT */
-
-
 .results {
     width: 100%;
     border-collapse: collapse;
@@ -209,7 +206,7 @@
 
 #seemore a {
     text-decoration: none;
-    color: #f8d7da;
+    color: #fff;
 }
 
 /* Account Info */
@@ -261,7 +258,7 @@
     text-align: center;
 }
 
-.apply-change a{
+.apply-change a {
     text-decoration: none;
     color: var(--text-color2);
     font-weight: bold;

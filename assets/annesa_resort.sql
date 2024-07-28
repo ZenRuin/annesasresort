@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 17, 2024 at 11:45 PM
+-- Generation Time: Jul 29, 2024 at 12:13 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,38 @@ SET time_zone = "+00:00";
 --
 -- Database: `annesa_resort`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accommodations`
+--
+
+CREATE TABLE `accommodations` (
+  `id` int(11) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `pax` int(11) NOT NULL,
+  `base_price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `accommodations`
+--
+
+INSERT INTO `accommodations` (`id`, `type`, `name`, `pax`, `base_price`) VALUES
+(1, 'Table', 'Pavilion 1 ni Maria', 6, 250.00),
+(2, 'Table', 'Pavilion 2 ni Berto', 6, 250.00),
+(3, 'Cottage', 'Cottage ni Tisya (1st Floor)', 35, 1800.00),
+(4, 'Cottage', 'Cottage ni Tisya (2nd Floor)', 100, 3000.00),
+(5, 'Cottage', 'Bamboo Cottage', 8, 600.00),
+(6, 'Cottage', 'Timothy, Tiffany, Trizh, Troy Cottage', 18, 1000.00),
+(7, 'Cottage', 'Regular Cottage', 8, 600.00),
+(8, 'Cottage', 'Family Cottage', 18, 1000.00),
+(9, 'Room', 'Rooms 1 - 6', 2, 350.00),
+(10, 'Room', 'Family Room #7', 5, 500.00),
+(11, 'Room', 'Family Room #8', 12, 1200.00),
+(12, 'Room', 'Family Room #9', 5, 550.00);
 
 -- --------------------------------------------------------
 
@@ -50,20 +82,49 @@ INSERT INTO `admins` (`id`, `name`, `email`, `password_hash`, `created_at`) VALU
 
 CREATE TABLE `bookings` (
   `id` int(11) NOT NULL,
-  `clientname` varchar(255) DEFAULT NULL,
-  `payment` decimal(10,2) DEFAULT NULL,
-  `status` enum('Unpaid','Refund','Paid') DEFAULT NULL,
-  `City` varchar(255) NOT NULL
+  `accommodation_id` int(11) NOT NULL,
+  `hours` int(11) NOT NULL,
+  `total_price` decimal(10,2) NOT NULL,
+  `booking_date` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `bookings`
 --
 
-INSERT INTO `bookings` (`id`, `clientname`, `payment`, `status`, `City`) VALUES
-(1, 'Malang, Richel', 2000.00, 'Unpaid', 'Quezon City'),
-(2, 'Cabrera, Joel', 2000.00, 'Paid', 'Quezon City'),
-(3, 'Bautista, Kim Angelo', 5000.00, 'Refund', 'Quezon City');
+INSERT INTO `bookings` (`id`, `accommodation_id`, `hours`, `total_price`, `booking_date`) VALUES
+(1, 4, 12, 3000.00, '2024-07-29 06:09:38');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `prices`
+--
+
+CREATE TABLE `prices` (
+  `id` int(11) NOT NULL,
+  `accommodation_id` int(11) NOT NULL,
+  `hours` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `prices`
+--
+
+INSERT INTO `prices` (`id`, `accommodation_id`, `hours`, `price`) VALUES
+(1, 9, 3, 350.00),
+(2, 9, 12, 1200.00),
+(3, 9, 24, 2400.00),
+(4, 10, 3, 500.00),
+(5, 10, 12, 1600.00),
+(6, 10, 24, 3200.00),
+(7, 11, 3, 1200.00),
+(8, 11, 12, 3200.00),
+(9, 11, 24, 4800.00),
+(10, 12, 3, 550.00),
+(11, 12, 12, 2200.00),
+(12, 12, 24, 4000.00);
 
 -- --------------------------------------------------------
 
@@ -94,6 +155,12 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `username`, `email`, `phon
 --
 
 --
+-- Indexes for table `accommodations`
+--
+ALTER TABLE `accommodations`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `admins`
 --
 ALTER TABLE `admins`
@@ -104,7 +171,15 @@ ALTER TABLE `admins`
 -- Indexes for table `bookings`
 --
 ALTER TABLE `bookings`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `accommodation_id` (`accommodation_id`);
+
+--
+-- Indexes for table `prices`
+--
+ALTER TABLE `prices`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `accommodation_id` (`accommodation_id`);
 
 --
 -- Indexes for table `users`
@@ -119,16 +194,50 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `accommodations`
+--
+ALTER TABLE `accommodations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `bookings`
+--
+ALTER TABLE `bookings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `prices`
+--
+ALTER TABLE `prices`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `bookings`
+--
+ALTER TABLE `bookings`
+  ADD CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`accommodation_id`) REFERENCES `accommodations` (`id`);
+
+--
+-- Constraints for table `prices`
+--
+ALTER TABLE `prices`
+  ADD CONSTRAINT `prices_ibfk_1` FOREIGN KEY (`accommodation_id`) REFERENCES `accommodations` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
