@@ -27,20 +27,20 @@ $bookingsQuery = "SELECT COUNT(*) as count FROM bookings";
 $countResult = $pdo->query($bookingsQuery);
 
 // Define the total payment query
-$totalPaymentSql = "SELECT SUM(payment) as totalPayment FROM bookings WHERE status != 'refund'";
+$totalPaymentSql = "SELECT SUM(total_price) as totalPayment FROM bookings";
 $totalPaymentResult = $pdo->query($totalPaymentSql);
 
+// Define the customers query
+$customersSql = "SELECT customer_name, City, total_price as payment FROM bookings";
+$customersResult = $pdo->query($customersSql);
+
 // Define the recent bookings query
-$recentBookingsSql = "SELECT clientname, payment, status FROM bookings WHERE status != 'refund'";
+$recentBookingsSql = "SELECT customer_name, total_price as payment, status FROM bookings";
 $recentBookingsResult = $pdo->query($recentBookingsSql);
 
-// Define the recent customers query
-$recentCustomersSql = "SELECT clientname, City FROM bookings";
+$recentCustomersSql = "SELECT customer_name, City FROM bookings";
 $recentCustomersResult = $pdo->query($recentCustomersSql);
 
-// Define the customers query
-$customersSql = "SELECT clientname, City, payment FROM bookings WHERE status != 'refund'";
-$customersResult = $pdo->query($customersSql);
 ?>
 
 <div>

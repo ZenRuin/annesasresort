@@ -42,11 +42,11 @@ session_start();
                             <hr class="dropdown-divider">
                         </li>
                         <?php if (isset($_SESSION['user_id'])): ?>
-                            <li><a class="dropdown-item" href="<?php echo $this->baseUrl; ?>logout.php">Log Out</a></li>
+                            <li><a class="dropdown-item" href="<?php echo $this->baseUrl; ?>">Log Out</a></li>
                         <?php else: ?>
                             <li>
                                 <a href="<?php echo $this->baseUrl; ?>index.php?action=home">
-                                    Log Out
+                                    Log In
                                 </a>
                             </li>
                         <?php endif; ?>

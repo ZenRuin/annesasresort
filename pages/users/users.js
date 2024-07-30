@@ -60,31 +60,31 @@ document.addEventListener("DOMContentLoaded", function () {
   updateCalendar();
 });
 
-document.querySelectorAll('select[name="hours"]').forEach((select) => {
-  select.addEventListener("change", function () {
-    let hours = this.value;
-    let roomNumber = this.closest("tr").querySelector(
-      'select[name="room_number"]'
-    ).value;
-    let priceElement = this.closest("tr").querySelector('div[id^="roomprice"]');
+// document.querySelectorAll('select[name="hours"]').forEach((select) => {
+//   select.addEventListener("change", function () {
+//     let hours = this.value;
+//     let roomNumber = this.closest("tr").querySelector(
+//       'select[name="room_number"]'
+//     ).value;
+//     let priceElement = this.closest("tr").querySelector('div[id^="roomprice"]');
 
-    fetch("get_price.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        room_number: roomNumber,
-        hours: hours,
-      }).toString(),
-    })
-      .then((response) => response.text())
-      .then((price) => {
-        priceElement.innerHTML = `₱ ${price}`;
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  });
-});
+//     fetch("get_price.php", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/x-www-form-urlencoded" },
+//       body: new URLSearchParams({
+//         room_number: roomNumber,
+//         hours: hours,
+//       }).toString(),
+//     })
+//       .then((response) => response.text())
+//       .then((price) => {
+//         priceElement.innerHTML = `₱ ${price}`;
+//       })
+//       .catch((error) => {
+//         console.error("Error:", error);
+//       });
+//   });
+// });
 
 // Navigation Toggle
 function showElement(elementId) {

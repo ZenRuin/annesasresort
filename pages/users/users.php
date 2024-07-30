@@ -187,18 +187,18 @@ $phone = isset($users['phone_number']) ? $users['phone_number'] : 'No phone numb
                     <div class="table-title">
                         <h1>Tables</h1>
                     </div>
-                    <form action="index.php?action=bookings" method="post" class="book-form">
-                        <table class="results table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Accommodation Class</th>
-                                    <th># of Pax</th>
-                                    <th>Price</th>
-                                    <th>Reservation</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
+                    <table class="results table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Accommodation Class</th>
+                                <th># of Pax</th>
+                                <th>Price</th>
+                                <th>Reservation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <form action="index.php?action=bookings" method="post" class="book-form">
                                     <td>
                                         <input type="hidden" name="accommodation_name" value="Pavilion 1 ni Maria">
                                         Pavilion 1 ni Maria
@@ -207,11 +207,12 @@ $phone = isset($users['phone_number']) ? $users['phone_number'] : 'No phone numb
                                     <td>250</td>
                                     <td>
                                         <input type="hidden" name="hours" value="12">
-                                        <!-- Set appropriate default value -->
                                         <button type="submit" class="btn btn-primary">Book Now</button>
                                     </td>
-                                </tr>
-                                <tr>
+                                </form>
+                            </tr>
+                            <tr>
+                                <form action="index.php?action=bookings" method="post" class="book-form">
                                     <td>
                                         <input type="hidden" name="accommodation_name" value="Pavilion 2 ni Berto">
                                         Pavilion 2 ni Berto
@@ -220,11 +221,12 @@ $phone = isset($users['phone_number']) ? $users['phone_number'] : 'No phone numb
                                     <td>250</td>
                                     <td>
                                         <input type="hidden" name="hours" value="12">
-                                        <!-- Set appropriate default value -->
                                         <button type="submit" class="btn btn-primary">Book Now</button>
                                     </td>
-                                </tr>
-                                <tr>
+                                </form>
+                            </tr>
+                            <tr>
+                                <form action="index.php?action=bookings" method="post" class="book-form">
                                     <td>
                                         <input type="hidden" name="accommodation_name"
                                             value="Cottage ni Tisya (1st Floor)">
@@ -234,11 +236,12 @@ $phone = isset($users['phone_number']) ? $users['phone_number'] : 'No phone numb
                                     <td>1800</td>
                                     <td>
                                         <input type="hidden" name="hours" value="12">
-                                        <!-- Set appropriate default value -->
                                         <button type="submit" class="btn btn-primary">Book Now</button>
                                     </td>
-                                </tr>
-                                <tr>
+                                </form>
+                            </tr>
+                            <tr>
+                                <form action="index.php?action=bookings" method="post" class="book-form">
                                     <td>
                                         <input type="hidden" name="accommodation_name"
                                             value="Cottage ni Tisya (2nd Floor)">
@@ -248,116 +251,12 @@ $phone = isset($users['phone_number']) ? $users['phone_number'] : 'No phone numb
                                     <td>3000</td>
                                     <td>
                                         <input type="hidden" name="hours" value="12">
-                                        <!-- Set appropriate default value -->
                                         <button type="submit" class="btn btn-primary">Book Now</button>
                                     </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </form>
-
-                </div>
-
-                <div class="cottage-details">
-                    <div class="cottage-title">
-                        <h1>Cottages</h1>
-                    </div>
-
-                    <form action="index.php?action=bookings" method="post" class="book-form">
-                        <table class="results table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Accommodation Class</th>
-                                    <th>Booking Tier</th>
-                                    <th># of Pax</th>
-                                    <th>Price</th>
-                                    <th>Reservation</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Bamboo Cottage</td>
-                                    <td>
-                                        <select name="booking_tier[Bamboo Cottage]" class="form-control">
-                                            <option value="Ponceng">Ponceng</option>
-                                            <option value="Vireng">Vireng</option>
-                                        </select>
-                                    </td>
-                                    <td>8</td>
-                                    <td>600</td>
-                                    <td>
-                                        <input type="hidden" name="accommodation_name[Bamboo Cottage]"
-                                            value="Bamboo Cottage">
-                                        <input type="hidden" name="price[Bamboo Cottage]" value="600">
-                                        <input type="hidden" name="pax[Bamboo Cottage]" value="8">
-                                        <button type="submit" class="btn btn-primary">Book Now</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Timothy, Tiffany, Trizh, Troy Cottage</td>
-                                    <td>
-                                        <select name="booking_tier[Timothy, Tiffany, Trizh, Troy Cottage]"
-                                            class="form-control">
-                                            <option value="Timothy">Timothy</option>
-                                            <option value="Tiffany">Tiffany</option>
-                                            <option value="Trizh">Trizh</option>
-                                            <option value="Troy">Troy</option>
-                                        </select>
-                                    </td>
-                                    <td>18</td>
-                                    <td>1000</td>
-                                    <td>
-                                        <input type="hidden"
-                                            name="accommodation_name[Timothy, Tiffany, Trizh, Troy Cottage]"
-                                            value="Timothy, Tiffany, Trizh, Troy Cottage">
-                                        <input type="hidden" name="price[Timothy, Tiffany, Trizh, Troy Cottage]"
-                                            value="1000">
-                                        <input type="hidden" name="pax[Timothy, Tiffany, Trizh, Troy Cottage]"
-                                            value="18">
-                                        <button type="submit" class="btn btn-primary">Book Now</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Regular Cottage</td>
-                                    <td>
-                                        <select name="booking_tier[Regular Cottage]" class="form-control">
-                                            <option value="Tryse">Tryse</option>
-                                            <option value="Tricia">Tricia</option>
-                                            <option value="Taragis">Taragis</option>
-                                        </select>
-                                    </td>
-                                    <td>8</td>
-                                    <td>600</td>
-                                    <td>
-                                        <input type="hidden" name="accommodation_name[Regular Cottage]"
-                                            value="Regular Cottage">
-                                        <input type="hidden" name="price[Regular Cottage]" value="600">
-                                        <input type="hidden" name="pax[Regular Cottage]" value="8">
-                                        <button type="submit" class="btn btn-primary">Book Now</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Family Cottage</td>
-                                    <td>
-                                        <select name="booking_tier[Family Cottage]" class="form-control">
-                                            <option value="Tristan">Tristan</option>
-                                            <option value="Edil">Edil</option>
-                                            <option value="Tracy">Tracy</option>
-                                        </select>
-                                    </td>
-                                    <td>18</td>
-                                    <td>1000</td>
-                                    <td>
-                                        <input type="hidden" name="accommodation_name[Family Cottage]"
-                                            value="Family Cottage">
-                                        <input type="hidden" name="price[Family Cottage]" value="1000">
-                                        <input type="hidden" name="pax[Family Cottage]" value="18">
-                                        <button type="submit" class="btn btn-primary">Book Now</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </form>
+                                </form>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="room-details">

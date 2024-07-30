@@ -10,51 +10,39 @@ class BookingController
 
     public function handleRequest()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'bookings') {
-            try {
-                // Check if the required POST fields are set
-                if (!isset($_POST['accommodation_name']) || !isset($_POST['hours'])) {
-                    throw new Exception("Required form data is missing.");
-                }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Get form data
+            $accommodation_name = $_POST['accommodation_name'];
+            $hours = $_POST['hours'];
 
-                // Collect and sanitize form data
-                $accommodation_name = htmlspecialchars($_POST['accommodation_name']);
-                $hours = intval($_POST['hours']);
-                $room_number = isset($_POST['room_number']) ? intval($_POST['room_number']) : null;
-                $booking_tier = isset($_POST['booking_tier']) ? htmlspecialchars($_POST['booking_tier']) : null;
+            // Fetch the accommodation details from the database
+            $stmt = $this->pdo->prepare("SELECT id, base_price FROM accommodations WHERE name = :name");
+            $stmt->bindValue(':name', $accommodation_name);
+            $stmt->execute();
+            $accommodation = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                // Fetch accommodation ID
-                $stmt = $this->pdo->prepare("SELECT id, base_price FROM accommodations WHERE name = ?");
-                $stmt->execute([$accommodation_name]);
-                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($accommodation) {
+                $accommodation_id = $accommodation['id'];
+                $base_price = $accommodation['base_price'];
 
-                if ($row) {
-                    $accommodation_id = $row['id'];
-                    $base_price = $row['base_price'];
 
-                    // Calculate total price based on hours and any additional logic
-                    $stmt_price = $this->pdo->prepare("SELECT price FROM prices WHERE accommodation_id = ? AND hours = ?");
-                    $stmt_price->execute([$accommodation_id, $hours]);
-                    $price_row = $stmt_price->fetch(PDO::FETCH_ASSOC);
+                // Insert booking information into the bookings table
+                $stmt = $this->pdo->prepare("INSERT INTO bookings (accommodation_id, hours, total_price) VALUES (:accommodation_id, :hours, :total_price)");
+                $stmt->bindValue(':accommodation_id', $accommodation_id, PDO::PARAM_INT);
+                $stmt->bindValue(':hours', $hours, PDO::PARAM_INT);
+                $stmt->bindValue(':total_price', $base_price, PDO::PARAM_STR);
 
-                    $total_price = $price_row ? $price_row['price'] : $base_price; // Fallback to base price if no specific pricing found
-
-                    // Insert booking record
-                    $stmt_insert = $this->pdo->prepare("INSERT INTO bookings (accommodation_id, hours, total_price) VALUES (?, ?, ?)");
-                    $stmt_insert->execute([$accommodation_id, $hours, $total_price]);
-
-                    // Check if booking was successful
-                    if ($stmt_insert->rowCount() > 0) {
-                        echo "Booking successful!";
-                    } else {
-                        echo "Booking failed. Please try again.";
-                    }
+                if ($stmt->execute()) {
+                    echo "Booking successful!";
                 } else {
-                    echo "Accommodation not found.";
+                    echo "Error: " . $stmt->errorInfo()[2];
                 }
-            } catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
+            } else {
+                echo "Accommodation not found!";
             }
+        } else {
+            echo "Invalid request method!";
         }
     }
 }
+?>
