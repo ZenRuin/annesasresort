@@ -1,4 +1,4 @@
 <?php
 // $baseUrl = 'https://annesasresort.online/';
-$baseUrl = 'http://localhost/annesasresort/';
+$baseUrl = 'https://annesasresort.online/';
 ?>
